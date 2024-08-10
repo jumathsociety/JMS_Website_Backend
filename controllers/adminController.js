@@ -12,7 +12,17 @@ const fetchUsers = asyncHandler(async (req, res) => {
     res.json({ message: "You are not a admin" });
     return;
   }
-  const users = await prisma.user.findMany();
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      phone: true,
+      department: true,
+      year: true,
+      college: true,
+    },
+  });
   res.json(users);
 });
 
