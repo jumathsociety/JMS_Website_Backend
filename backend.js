@@ -2,6 +2,8 @@ import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import jwt from 'jsonwebtoken'
+import dotenv from "dotenv"
+dotenv.config();
 const app = express();
 
 app.use(express.json())
@@ -10,8 +12,8 @@ app.use(cors({origin: true, credentials: true}));
 
 const JWT_SECRET = "This website has been made by Farshid Hossain"
 
-const server = "hossainfarshid:JUITfh-891@clusterfarshid.vcl5snh.mongodb.net";
-const database = "JMS";
+const server = process.env.SERVER;
+const database = process.env.DATABASE;
 
 const connect = async () => {
     try {
