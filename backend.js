@@ -108,6 +108,26 @@ app.post("/checktoken", async(req, res)=>{
     }
 })
 
+app.put("/editprofile", async (req, res) => {
+    try {
+        await collection.findOneAndUpdate(
+            { email: req.body.email },
+            {
+                $set: {
+                    name: req.body.name,
+                    college: req.body.college,
+                    department: req.body.department,
+                    year: req.body.year,
+                },
+            }
+        );
+        res.status(200).json({ message: "Profile updated successfully" });
+    } catch (err) {
+        res.status(400).json({ message: "Invalid token" });
+    }
+});
+
+
 app.listen(port, hostname, ()=>{
     console.log(`http://${hostname}:${port}`)
 })
