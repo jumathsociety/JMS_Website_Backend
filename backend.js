@@ -1,133 +1,39 @@
 import express from "express";
 import cors from "cors";
-// import mongoose from "mongoose";
-import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 import "dotenv/config";
-import adminRoutes from "../JMS_Website_Backend/routes/adminRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+
 const app = express();
 
 app.use(express.json());
-app.set("view-engine", "html");
-app.use(cors({ origin: true, credentials: true }));
+
+const corsOptions = {
+    origin: [
+      "http://localhost:3001",
+      "http://localhost:5173",
+    ],
+    credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(cookieParser());
 
-const JWT_SECRET = "This website has been made by Farshid Hossain";
+app.use("/api/user", userRoutes);
+app.use("/api/", adminRoutes);
 
-// const server = process.env.SERVER;
-// const database = process.env.DATABASE;
-
-// const connect = async () => {
-//     try {
-//         await mongoose.connect(`mongodb+srv://${server}/${database}`);
-//         console.log("Connecion Successful");
-//     }
-//     catch (err) {
-//         console.log(err);
-//     }
-// };
-// connect();
-
-// var Schema = new mongoose.Schema({
-//     name:String,
-//     year:String,
-//     department:String,
-//     phone: Number,
-//     email:String,
-//     college:String,
-//     password: String
-// });
-
-// let collection = mongoose.model("collection", Schema);
-
-const port = 8000;
-const hostname = "localhost";
-
-app.post("/signup", async (req, res) => {
-  let message = "";
-  const data = new collection(req.body);
-  const mail = await collection.find({ email: req.body.email });
-  if (mail.length == 0) {
-    await data.save();
-    res.status(200).send("OK");
-  } else {
-    res.status(400).send("Not OK");
-  }
+app.get("/", (req, res) => {
+    res.send("JMS Backend is running");
+});
+  
+app.listen((process.env.PORT || 3000), () => {
+    console.log(`Server is listening on port ${process.env.PORT}`);
 });
 
-app.post("/login", async (req, res) => {
-  const mail = await collection.find({ email: req.body.email });
-  if (mail.length === 0) {
-    res.status(400).json({
-      message: "You have not registered before. Please register first.",
-    });
-  } else {
-    if (mail[0].password !== req.body.password) {
-      res.status(400).json({ message: "Wrong Password" });
-    } else {
-      const token = jwt.sign(
-        {
-          id: mail[0]._id,
-          email: mail[0].email,
-        },
-        JWT_SECRET,
-        {
-          expiresIn: "24h",
-        }
-      );
-      const profiles = {
-        name: mail[0].name,
-        email: mail[0].email,
-        college: mail[0].college,
-        password: mail[0].password,
-        year: mail[0].year,
-        department: mail[0].department,
-      };
-      res.status(200).json({
-        message: "OK",
-        token: token,
-        profileinfo: profiles,
-      });
-    }
-  }
-});
-
-app.post("/removeprofile", async (req, res) => {
-  const mail = await collection.deleteOne({ email: req.body.email });
-  res.status(200).send("Deleted");
-});
-
-app.post("/checktoken", async (req, res) => {
-  try {
-    const decode = jwt.verify(req.body.token, JWT_SECRET);
-    res.status(200).send("OK");
-  } catch (err) {
-    res.status(400).send("NOT Ok");
-  }
-});
-
-app.use("/api/admin", adminRoutes);
-app.put("/editprofile", async (req, res) => {
-    try {
-        await collection.findOneAndUpdate(
-            { email: req.body.email },
-            {
-                $set: {
-                    name: req.body.name,
-                    college: req.body.college,
-                    department: req.body.department,
-                    year: req.body.year,
-                },
-            }
-        );
-        res.status(200).json({ message: "Profile updated successfully" });
-    } catch (err) {
-        res.status(400).json({ message: "Invalid token" });
-    }
-});
-
-
-app.listen(port, hostname, ()=>{
-    console.log(`http://${hostname}:${port}`)
-})
-
+// Routes name:
+// /api/user/signup -> Register user (POST) data: (email, password, name, department, college, phone, year)
+// /api/user/login -> Register user (POST) data: (email, password)
+// /api/user/editprofile -> Edit user profile (PUT) data: (name, department, college, phone, year)
+// /api/user/removeprofile -> Remove user profile (POST)
+// /api/admin/users -> Get all users (GET)
