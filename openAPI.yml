@@ -1,0 +1,170 @@
+openapi: 3.0.3
+info:
+  title: User Management API
+  description: API for managing user profiles in a college application.
+  version: 1.0.0
+servers:
+  - url: https://api.yourdomain.com
+    description: Production server
+  - url: http://localhost:3000
+    description: Development server
+
+paths:
+  /api/user/signup:
+    post:
+      summary: Register a new user
+      description: Registers a new user with their email, password, and profile information.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+                password:
+                  type: string
+                  format: password
+                  example: "securepassword"
+                name:
+                  type: string
+                  example: "John Doe"
+                department:
+                  type: string
+                  example: "Computer Science"
+                college:
+                  type: string
+                  example: "XYZ University"
+                phone:
+                  type: string
+                  example: "+1234567890"
+                year:
+                  type: integer
+                  example: 3
+              required:
+                - email
+                - password
+                - name
+                - department
+                - college
+                - phone
+                - year
+      responses:
+        '201':
+          description: User registered successfully
+        '400':
+          description: Invalid input
+
+  /api/user/login:
+    post:
+      summary: Log in a user
+      description: Authenticates a user and returns a token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+                password:
+                  type: string
+                  format: password
+                  example: "securepassword"
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: User logged in successfully
+        '401':
+          description: Invalid credentials
+
+  /api/user/editprofile:
+    put:
+      summary: Edit user profile
+      description: Allows the user to update their profile information.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "John Doe"
+                department:
+                  type: string
+                  example: "Computer Science"
+                college:
+                  type: string
+                  example: "XYZ University"
+                phone:
+                  type: string
+                  example: "+1234567890"
+                year:
+                  type: integer
+                  example: 3
+      responses:
+        '200':
+          description: Profile updated successfully
+        '400':
+          description: Invalid input
+        '404':
+          description: User not found
+
+  /api/user/removeprofile:
+    post:
+      summary: Remove user profile
+      description: Deletes the user profile from the system.
+      responses:
+        '200':
+          description: Profile removed successfully
+        '404':
+          description: User not found
+
+  /api/admin/users:
+    get:
+      summary: Get all users
+      description: Returns a list of all registered users. Accessible only to admin users.
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: "1"
+                    email:
+                      type: string
+                      format: email
+                      example: "user@example.com"
+                    name:
+                      type: string
+                      example: "John Doe"
+                    department:
+                      type: string
+                      example: "Computer Science"
+                    college:
+                      type: string
+                      example: "XYZ University"
+                    phone:
+                      type: string
+                      example: "+1234567890"
+                    year:
+                      type: integer
+                      example: 3
+        '403':
+          description: Forbidden
