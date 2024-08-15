@@ -21,7 +21,7 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 
 app.use("/api/user", userRoutes);
-app.use("/api/", adminRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.get("/", (req, res) => {
     res.send("JMS Backend is running");
