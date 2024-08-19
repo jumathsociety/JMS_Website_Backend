@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import apiroute from './routers/query.route.js'
 import "dotenv/config";
 import adminRoutes from "./routes/adminRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
@@ -26,6 +27,8 @@ app.use("/api/admin", adminRoutes);
 app.get("/", (req, res) => {
     res.send("JMS Backend is running");
 });
+
+app.use("/api", apiroute)
   
 app.listen((process.env.PORT || 3000), () => {
     console.log(`Server is listening on port ${process.env.PORT}`);
