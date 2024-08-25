@@ -5,6 +5,7 @@ import apiroute from './routers/query.route.js'
 import "dotenv/config";
 import adminRoutes from "./routes/adminRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import userrouter from "./routers/users.routes.js"
 
 const app = express();
 
